@@ -1,0 +1,146 @@
+
+#include <stdio.h>
+
+void reverse(int a[], int left, int right)
+{
+    int temp;
+
+    while (left < right)
+    {
+        temp = a[left];
+        a[left] = a[right];
+        a[right] = temp;
+        left++;
+        right--;
+    }
+}
+
+int main()
+{
+    int a[12], n, i, k, r, d;
+    int sum = 0, min, max;
+    int second, found = 0;
+    int peaks = 0, run = 1, longest = 1;
+    int count = 0;
+
+    /* Read array size */
+    do
+    {
+        printf("Enter N (5 to 12): ");
+        scanf("%d", &n);
+    } while (n < 5 || n > 12);
+
+    /* Read array elements */
+    for (i = 0; i < n; i++)
+    {
+        do
+        {
+            printf("Enter reading %d (0 to 1000): ", i + 1);
+            scanf("%d", &a[i]);
+        } while (a[i] < 0 || a[i] > 1000);
+    }
+
+    min = max = a[0];
+
+    /* Calculate sum, minimum and maximum */
+    for (i = 0; i < n; i++)
+    {
+        sum = sum + a[i];
+
+        if (a[i] < min)
+            min = a[i];
+
+        if (a[i] > max)
+            max = a[i];
+    }
+
+    printf("\nOriginal sequence: ");
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+
+    printf("\nSum = %d", sum);
+    printf("\nAverage = %.2f", (float)sum / n);
+    printf("\nMinimum = %d", min);
+    printf("\nMaximum = %d", max);
+
+    /* Find second-largest distinct value */
+    for (i = 0; i < n; i++)
+    {
+        if (a[i] < max &&
+            (!found || a[i] > second))
+        {
+            second = a[i];
+            found = 1;
+        }
+    }
+
+    if (found)
+        printf("\nSecond-largest distinct = %d", second);
+    else
+        printf("\nNo second-largest distinct value");
+
+    /* Count local peaks */
+    for (i = 1; i < n - 1; i++)
+    {
+        if (a[i] > a[i - 1] &&
+            a[i] > a[i + 1])
+            peaks++;
+    }
+
+    printf("\nLocal peaks = %d", peaks);
+
+    /* Find longest increasing run */
+    for (i = 1; i < n; i++)
+    {
+        if (a[i] > a[i - 1])
+        {
+            run++;
+
+            if (run > longest)
+                longest = run;
+        }
+        else
+        {
+            run = 1;
+        }
+    }
+
+    printf("\nLongest increasing run = %d", longest);
+
+    /* Read rotation value */
+    printf("\nEnter K (rotation value): ");
+    scanf("%d", &k);
+
+    k = k % n;
+
+    if (k < 0)
+        k = k + n;
+
+    /* Rotate right using the same array */
+    reverse(a, 0, n - 1);
+    reverse(a, 0, k - 1);
+    reverse(a, k, n - 1);
+
+    printf("Rotated sequence: ");
+
+    for (i = 0; i < n; i++)
+        printf("%d ", a[i]);
+
+    /* Calculate personal divisor */
+    printf("\nEnter last two digits of registration number: ");
+    scanf("%d", &r);
+
+    d = (r % 9) + 1;
+
+    /* Count divisible values after rotation */
+    for (i = 0; i < n; i++)
+    {
+        if (a[i] % d == 0)
+            count++;
+    }
+
+    printf("\nD = %d", d);
+    printf("\nNumbers divisible by D = %d\n", count);
+
+    return 0;
+}
